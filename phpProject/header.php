@@ -23,11 +23,11 @@
         <img src="img/logowhite.png" alt="Blogs logo">
         <ul>
           <li><a href="index.php">Home</a></li>
-          <li><a href="discover.php">About Us</a></li>
-          <li><a href="blog.php">Find Blogs</a></li>
+          <li><a href="userlist.php">User List</a></li>
+          
           <?php
-            if (isset($_SESSION["useruid"])) {
-              echo "<li><a href='profile.php'>Profile Page</a></li>";
+            if (isset($_SESSION["userId"])) {
+              echo "<li>". $_SESSION["userId"]."</li>";
               echo "<li><a href='logout.php'>Logout</a></li>";
             }
             else {
@@ -35,9 +35,12 @@
               echo "<li><a href='login.php'>Log in</a></li>";
             }
           ?>
+          <form action = "" method=post>
+    <button type="submit" value="Logout">Log out</button>
         </ul>
       </div>
+      
     </nav>
-
+          
 <!--A quick wrapper to align the content (ends in footer.php)-->
 <div class="wrapper">

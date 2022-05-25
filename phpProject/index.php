@@ -1,6 +1,24 @@
+<head>
+<link rel="stylesheet" href="style.css" />
+<style>
+body {
+    background-color: #333333;
+}
+
+.wrapper {
+    width: 900px;
+    margin: 0 auto;
+}
+  </style>
+</head>
 <!--Splitting the header and footer into separate documents makes things easier!-->
+<body>
 <?php
   include_once 'header.php';
+  ?>
+<section class="index-intro">
+<?php
+ 
   date_default_timezone_set('America/New_York');
 $date = date('Y-m-d H:i:s');
 
@@ -10,7 +28,7 @@ echo "<br>";
  include_once 'phpCode/includes/createdb.inc.php';
 ?>
 
-<section class="index-intro">
+
   <h1>This Is Our Chatroom Site</h1>
   <p>Sign up and start a chat room live messaging session!</p>
 
@@ -47,3 +65,4 @@ echo "<br>";
 <?php
   include_once 'footer.php';
 ?>
+</body>

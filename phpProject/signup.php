@@ -1,10 +1,9 @@
 <head>
 <style>
+  
         .required:after {
             content:" *";
             color: red;
-
-          
         }
 
    
@@ -120,10 +119,11 @@
       }
       else if ($_GET["error"] == "none") {
         echo "<p>You have signed up!</p>";
-      }
+      }//redirect using get method from php code
+      // header("Location:../signup.php?location=".$_SERVER['HTTP_REFERER']);
 
-      
-
+      // $test = $_GET['location'];
+      // header('Location:'.$test);
     }
   ?>
 </section>

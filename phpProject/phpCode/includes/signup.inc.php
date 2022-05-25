@@ -24,27 +24,27 @@ if ($twofaEnabled=='')
   // Left inputs empty
   // We set the functions "!== false" since "=== true" has a risk of giving us the wrong outcome
   if (emptyInputSignup($name, $email, $username, $pwd, $pwdRepeat) !== false) {
-    header("location: ../signup.php?error=emptyinput");
+    header("location: ../../signup.php?error=emptyinput");
 		exit();
   }
 	// Proper username chosen
   if (invalidUid($username) !== false) {
-    header("location: ../signup.php?error=invaliduid");
+    header("location: ../../signup.php?error=invaliduid");
 		exit();
   }
   // Proper email chosen
   if (invalidEmail($email) !== false) {
-    header("location: ../signup.php?error=invalidemail");
+    header("location: ../../signup.php?error=invalidemail");
 		exit();
   }
   // Do the two passwords match?
   if (pwdMatch($pwd, $pwdRepeat) !== false) {
-    header("location: ../signup.php?error=passwordsdontmatch");
+    header("location: ../../signup.php?error=passwordsdontmatch");
 		exit();
   }
   // Is the username taken already
   if (uidExists($conn, $username) !== false) {
-    header("location: ../signup.php?error=usernametaken");
+    header("location: ../../signup.php?error=usernametaken");
 		exit();
   }
 */

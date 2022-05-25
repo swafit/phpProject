@@ -17,10 +17,10 @@ try{
     $sql="CREATE TABLE if NOT EXISTS users (userId int(11) PRIMARY KEY AUTO_INCREMENT NOT NULL, fullName varchar(128)NOT NULL, userName varchar(128) NOT NULL, userEmail varchar(128) NOT NULL, twoFactorEnabled BOOLEAN DEFAULT FALSE, twoFactorCodeSecret varchar(255) default '', userPwd varchar(128) NOT NULL )";
     $conn->exec($sql);
 
-    $sql="CREATE TABLE IF NOT EXISTS convoController (userIdOne int(11) NOT NULL, userIdTwo int(11) NOT NULL, convoId int(11) AUTO_INCREMENT NOT NULL, PRIMARY KEY(userIdOne, userIdTwo))";
+    $sql="CREATE TABLE IF NOT EXISTS convocontroller (userIdOne int(11) NOT NULL, userIdTwo int(11) NOT NULL, convoId int(11) AUTO_INCREMENT NOT NULL PRIMARY KEY);";
     $conn->exec($sql);
-/*
-
+    
+    /*
     $sql2 = "INSERT INTO `users` (fullName, userName, userEmail, twoFactorEnabled, twoFactorCodeSecret, userPwd) VALUES ('William Chalifoux', 'swafit', 'william.chalifoux@gmail.com', false, '', 'password')";
     $conn->exec($sql2);
     */

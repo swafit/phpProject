@@ -1,3 +1,10 @@
+<?php 
+session_start();
+if(isset($_SESSION['user'])){
+  header("location: user_list.php");
+  exit();
+}
+?>
 <DOCTYPE html>
 <html>
 <head>
@@ -9,13 +16,15 @@
   include_once 'header.php';
 ?>
 
+
 <section class="signup-form">
   <h2>Log In</h2>
   <div class="signup-form-form">
-    <form action="includes/login.inc.php" method="post">
+    <form action="phpCode/includes/login.inc.php" method="post">
       <input type="text" name="uid" placeholder="Username/Email...">
       <input type="password" name="pwd" placeholder="Password...">
-      <button type="submit" name="submit">Sign up</button>
+      <button type="submit" name="submit">Log in</button><br><br>
+      <p>Don't have an account? <a href="signup.php">Sign up now</a>.</p>
     </form>
   </div>
   <?php

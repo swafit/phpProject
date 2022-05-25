@@ -1,4 +1,33 @@
 <?php
+//write a message to the specific database
+function writeMessage($conn, $convoId, $timeStamp, $message){
+	$userId = $_SESSION['id'];
+	$sql = "INSERT INTO".$convoId." (userId, message, dateWritten) VALUES (?, ?, ?);";
+		$stmt = mysqli_stmt_init($conn);
+		if (!mysqli_stmt_prepare($stmt, $sql)) {
+			header("location: ../../chat.php?error=stmtfailed");
+			exit();
+		}
+		mysqli_stmt_bind_param($stmt, "iss", $userId, $message, $timeStamp);
+		mysqli_stmt_execute($stmt);
+		mysqli_stmt_close($stmt);
+}
+
+//get all the messages from the specific database
+function getChats($convoId, $conn){
+	$sql="SELECT * FROM ".$convoId." WHERE convoId=?;";
+	$stmt = mysqli_stmt_init($conn);
+	if (!mysqli_stmt_prepare($stmt, $sql)) {
+		header("location: ../../chat.php?error=stmtfailed");
+		exit();
+	}
+	mysqli_stmt_bind_param($stmt, "i", $convoId);
+	mysqli_stmt_execute($stmt);
+
+
+
+}
+
 
 // Check for empty input signup
 function emptyInputSignup($conn, $name, $username, $email, $twofaEnabled, $twofaCodeSecret, $pwd, $pwdRepeat) {
@@ -13,25 +42,47 @@ function emptyInputSignup($conn, $name, $username, $email, $twofaEnabled, $twofa
 }
 
 
-
+//get the id of the convo
 function getConvoId($conn, $selectedUserId) {
-
-
-
-	$userIdOne = $SESSION['$Id'];
-	if ($userIdOne <= $selectedUserId){
-	$userIdTwo = $userIdOne;
-	$userIdOne=$selectedUserId;
-	}
-
-
-
 	$sql="SELECT * FROM convoController WHERE userIdOne=? AND userIdTwo=?;";
+	$stmt = mysqli_stmt_init($conn);
+	if (!mysqli_stmt_prepare($stmt, $sql)) {
+		header("location: ../../chat.php?error=stmtfailed");
+		exit();
+	}
+	$userIdOne = $_SESSION['$id'];
+	$userIdTwo = $selectedUserId;
+	if ($userIdOne >= $selectedUserId){
+		$userIdOne = $selectedUserId;
+		$userIdTwo = $_SESSION['$id'];
+	}
+	mysqli_stmt_bind_param($stmt, "ii", $userIdOne, $userIdTwo);
+	mysqli_stmt_execute($stmt);
 
-	$convoId = $conn->exec();
+	// "Get result" returns the results from a prepared statement
+	$resultData = mysqli_stmt_get_result($stmt);
+
+	if ($row = mysqli_fetch_assoc($resultData)) {
+		$convoId = $row['convoId'];
+	}
+	else {
+		$sql = "INSERT INTO convoController (userIdOne, userIdTwo) VALUES (?, ?);";
+		$stmt1 = mysqli_stmt_init($conn);
+		if (!mysqli_stmt_prepare($stmt1, $sql)) {
+			header("location: ../../chat.php?error=stmtfailed");
+			exit();
+		}
+		mysqli_stmt_bind_param($stmt1, "ii", $userIdOne, $userIdTwo);
+		$convoId = mysqli_stmt_insert_id($stmt1);
+		mysqli_stmt_close($stmt1);
+		$sqlDB = "CREATE TABLE if NOT EXISTS ".$convoId." (messageId int(11) PRIMARY KEY AUTO_INCREMENT NOT NULL, userId int(11) NOT NULL, message VARCHAR(255) NOT NULL, dateWritten VARCHAR(255) NOT NULL);";
+    	$conn->exec($sqlDB);
+	}
+	mysqli_stmt_close($stmt);
 
 	return $convoId;
 }
+
 
 // Check invalid username
 function invalidUid($username) {
@@ -71,10 +122,10 @@ function pwdMatch($pwd, $pwdrepeat) {
 
 // Check if username is in database, if so then return data
 function uidExists($conn, $username) {
-  $sql = "SELECT * FROM users WHERE usersUid = ? OR usersEmail = ?;";
+  $sql = "SELECT * FROM users WHERE userId = ? OR userEmail = ?;";
 	$stmt = mysqli_stmt_init($conn);
 	if (!mysqli_stmt_prepare($stmt, $sql)) {
-	 	header("location: ../signup.php?error=stmtfailed");
+		header("location: ../../signup.php?error=stmtfailed");
 		exit();
 	}
 
@@ -97,10 +148,10 @@ function uidExists($conn, $username) {
 
 // Insert new user into database
 function createUser($conn, $name, $username, $email, $tfe, $tfcs,  $pwd) {
-  $sql = "INSERT INTO users (fullName, userName, userEmail, twoFactorEnabled, twoFactorCodeSecret, userPwd) VALUES (?, ?, ?, ?, ?, ?);";
+	$sql = "INSERT INTO users (fullName, userName, userEmail, twoFactorEnabled, twoFactorCodeSecret, userPwd) VALUES (?, ?, ?, ?, ?, ?);";
 	$stmt = mysqli_stmt_init($conn);
 	if (!mysqli_stmt_prepare($stmt, $sql)) {
-	 	header("location: ../signup.php?error=stmtfailed");
+		header("location: ../../signup.php?error=stmtfailed");
 		exit();
 	}
 
@@ -110,7 +161,7 @@ function createUser($conn, $name, $username, $email, $tfe, $tfcs,  $pwd) {
 	mysqli_stmt_execute($stmt);
 	mysqli_stmt_close($stmt);
 	mysqli_close($conn);
-	header("location: ../signup.php?error=none");
+	header("location: ../../signup.php?error=none");
 	exit();
 }
 
@@ -131,7 +182,7 @@ function loginUser($conn, $username, $pwd) {
 	$uidExists = uidExists($conn, $username);
 
 	if ($uidExists === false) {
-		header("location: ../login.php?error=wronglogin");
+		header("location: ../../login.php?error=wronglogin");
 		exit();
 	}
 
@@ -139,14 +190,15 @@ function loginUser($conn, $username, $pwd) {
 	$checkPwd = password_verify($pwd, $pwdHashed);
 
 	if ($checkPwd === false) {
-		header("location: ../login.php?error=wronglogin");
+		header("location: ../../login.php?error=wronglogin");
 		exit();
 	}
 	elseif ($checkPwd === true) {
 		session_start();
-		$_SESSION["userid"] = $uidExists["usersId"];
-		$_SESSION["useruid"] = $uidExists["usersUid"];
-		header("location: ../index.php?error=none");
+		$_SESSION["userid"] = $uidExists["userId"];
+		$_SESSION["useruid"] = $uidExists["userUid"];
+		header("location: ../../index.php?error=none");
 		exit();
 	}
 }
+
