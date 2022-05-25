@@ -12,6 +12,27 @@ function emptyInputSignup($conn, $name, $username, $email, $twofaEnabled, $twofa
 	return $result;
 }
 
+
+
+function getConvoId($conn, $selectedUserId) {
+
+
+
+	$userIdOne = $SESSION['$Id'];
+	if ($userIdOne <= $selectedUserId){
+	$userIdTwo = $userIdOne;
+	$userIdOne=$selectedUserId;
+	}
+
+
+
+	$sql="SELECT * FROM convoController WHERE userIdOne=? AND userIdTwo=?;";
+
+	$convoId = $conn->exec();
+
+	return $convoId;
+}
+
 // Check invalid username
 function invalidUid($username) {
 	$result=false;
