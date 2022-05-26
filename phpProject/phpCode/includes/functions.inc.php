@@ -3,7 +3,7 @@
 /*
 function writeMessage($conn, $convoId, $timeStamp, $message){
 	$userId = $_SESSION['userId'];
-	$sql = "INSERT INTO convo".$convoId." (userId, message, dateWritten) VALUES (?, ?, ?);";
+	$sql = "INSERT INTO convos (userId, message, dateWritten) VALUES (?, ?, ?);";
 		$stmt = mysqli_stmt_init($conn);
 		if (!mysqli_stmt_prepare($stmt, $sql)) {
 			header("location: ../../chat.php?error=stmtfailed");
@@ -75,9 +75,6 @@ function getConvoId($conn, $selectedUserId) {
 		$convoId = mysqli_stmt_insert_id($stmt1);
 		
 		mysqli_stmt_close($stmt1);
-
-		$sqlDB = "CREATE TABLE if NOT EXISTS convo".$convoId." (messageId int(11) PRIMARY KEY AUTO_INCREMENT NOT NULL, userId int(11) NOT NULL, message VARCHAR(255) NOT NULL, dateWritten VARCHAR(255) NOT NULL);";
-    	$conn->query($sqlDB);
 	}
 	mysqli_stmt_close($stmt);
 	$_SESSION['convoId'] = $convoId;

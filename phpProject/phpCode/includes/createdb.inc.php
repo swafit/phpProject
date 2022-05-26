@@ -11,7 +11,7 @@ try{
     $conn->exec($sqlDB);
     //echo "new db made";
     $conn = new PDO('mysql:host=localhost;dbname=phpProject01', $username, $password);
-    // $sql = "DROP TABLE IF EXISTS `users`;";
+    // $sql = "DROP TABLE IF EXISTS `convos`;";
     // $conn->exec($sql);
 
     $sql="CREATE TABLE if NOT EXISTS users (userId int(11) PRIMARY KEY AUTO_INCREMENT NOT NULL, fullName varchar(128)NOT NULL, userName varchar(128) NOT NULL, userEmail varchar(128) NOT NULL, twoFactorEnabled BOOLEAN DEFAULT FALSE, twoFactorCodeSecret varchar(255) default '', userPwd varchar(128) NOT NULL )";
@@ -20,6 +20,9 @@ try{
     $sql="CREATE TABLE IF NOT EXISTS convocontroller (userIdOne int(11) NOT NULL, userIdTwo int(11) NOT NULL, convoId int(11) AUTO_INCREMENT NOT NULL PRIMARY KEY);";
     $conn->exec($sql);
     
+    $sql = "CREATE TABLE if NOT EXISTS convos (messageId int(11) PRIMARY KEY AUTO_INCREMENT NOT NULL, convoId int(11) NOT NULL, userId int(11) NOT NULL, message VARCHAR(255) NOT NULL, dateWritten VARCHAR(255) NOT NULL);";
+    $conn->exec($sql);
+
     /*
     $sql2 = "INSERT INTO `users` (fullName, userName, userEmail, twoFactorEnabled, twoFactorCodeSecret, userPwd) VALUES ('William Chalifoux', 'swafit', 'william.chalifoux@gmail.com', false, '', 'password')";
     $conn->exec($sql2);

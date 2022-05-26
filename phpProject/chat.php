@@ -30,17 +30,15 @@ if(!isset($_SESSION['userId'])){
   transition: width 0.4s ease-in-out;
 }
 
-
-
 /* When the input field gets focus, change its width to 100% */
 input[type=text]:focus {
   width: 100%;
 }
     </style>
     <?php
-    function writeMessage($conn, $convoId, $timeStamp, $message){
+    if(isset($_POST['message'])){
       $userId = $_SESSION['userId'];
-      $sql = "INSERT INTO convo".$_SESSION['convoId']." (userId, message, dateWritten) VALUES (?, ?, ?);";
+      $sql = "INSERT INTO convos(userId, message, dateWritten) VALUES (?, ?, ?);";
         $stmt = mysqli_stmt_init($conn);
         if (!mysqli_stmt_prepare($stmt, $sql)) {
           header("location: ../../chat.php?error=stmtfailed");
@@ -74,8 +72,12 @@ $servername = "localhost";
 $dBUsername = "root";
 $dBPassword = "";
 $dbName = "phpproject01";
+
+
 $selectedUserId = $_POST['selectedId'];
+
 $conn = mysqli_connect($servername, $dBUsername, $dBPassword, $dbName);
+
 $convoId = getConvoId($conn, $selectedUserId);
       ?>
       </div>
@@ -105,27 +107,25 @@ $convoId = getConvoId($conn, $selectedUserId);
       <tbody id="myTable">   
     <?php     
                 //get all the messages from the specific database
-
-              $sql="SELECT * FROM convo".$convoId." WHERE convoId=?;";
+              $sql="SELECT * FROM `convos` WHERE convoId=?;";
               $stmt = mysqli_stmt_init($conn);
               if (!mysqli_stmt_prepare($stmt, $sql)) {
-                header("location: ../../chat.php?error=stmtfailed");
+                header("location: index.php?error=stmtfailed");
                 exit();
               }
               mysqli_stmt_bind_param($stmt, "i", $convoId);
               mysqli_stmt_execute($stmt);
 
-
+              $rs_result = mysqli_stmt_get_result($stmt);
             while ($row = mysqli_fetch_array($rs_result)) {    
-                  //Display each field of the records.    
-                  ?>     
-            <tr>     
-              <td><?php echo $row['message']; ?></td>
-              <td><?php echo $row['dateWritten']; ?></td>
-              <td><?php echo $row['userId']; ?></td>
-<?php } ?>
-        <body>
-                </tr>     
+              //Display each field of the records.    
+              ?>     
+              <tr>     
+                <td><?php echo $row['message']; ?></td>
+                <td><?php echo $row['dateWritten']; ?></td>
+                <td><?php echo $row['userId']; ?></td>
+              </tr>     
+            <?php } ?>
 
           </tbody>   
         </table>   
@@ -139,18 +139,20 @@ $convoId = getConvoId($conn, $selectedUserId);
         });
       });
     </script>
-        <form action = "" method = "post">
+        <form action = "chat.php" method = "post">
     <label for ="msg">Type Message...</label>
     <input type ="text" maxlength="255" id="msg" name="msg">
+    <input type ="hidden" id="selectedId" name="selectedId" value="<?php echo $_POST['selectedId']; ?>">
     <button type="submit" value="send">Send </button><br><br><br>
-    </form>
-    <form action="chat.php" method ="post">
-        <button type="submit" name="convoDB" value="Refresh">Refresh messages</button>
         <?php
         date_default_timezone_set('America/New_York');
         $date = date('Y-m-d H:i:s');
-        echo 'Date: ', $date;
         ?>
+        <input type="hidden" id="dateWritten" name="dateWritten" value="<?php echo $date;?>">
+    </form>
+    <form action="chat.php" method ="post">
+    <input type ="hidden" id="selectedId" name="selectedId" value="<?php $_POST['selectedId'];?>">
+        <button type="submit" name="convoDB" value="Refresh">Refresh messages</button>
       </form>
     </form> 
     <?php include_once 'footer.php'; ?>

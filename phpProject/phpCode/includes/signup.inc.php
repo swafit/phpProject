@@ -54,6 +54,6 @@ if ($twofaEnabled=='')
   createUser($conn, $name, $username, $email, $twofaEnabled, $twofaCodeSecret, $pwd);
 
 } else {
-	header("location: ../signup.php");
+	header("location: ../../signup.php");
     exit();
 }

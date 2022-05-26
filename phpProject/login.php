@@ -1,7 +1,7 @@
 <?php
   include_once 'header.php';
 ?>
-<?php 
+<?php
 if(isset($_SESSION['userId'])){
   header("location: userlist.php");
   exit();
