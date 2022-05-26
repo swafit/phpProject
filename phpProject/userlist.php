@@ -1,6 +1,5 @@
 <?php
   include_once 'header.php';
-  session_start();
   if(!isset($_SESSION['userId'])){
     header("location: login.php");
     exit();
@@ -11,38 +10,38 @@
     <style>
       #users{
         border-collapse: collapse;
-  width: 100%;
+        width: 100%;
       }
       #users td, #users th {
         border: 1px solid #ddd;
-  padding: 8px;
+        padding: 8px;
       }
       #users th {
-  padding-top: 12px;
-  padding-bottom: 12px;
-  text-align: left;
-  background-color: #04AA6D;
-  color: white;
-}
+        padding-top: 12px;
+        padding-bottom: 12px;
+        text-align: left;
+        background-color: #04AA6D;
+        color: white;
+      }
       body {
-    background-color: #333333;
-}
+        background-color: #333333;
+      }
 
-.wrapper {
-    width: 900px;
-    margin: 0 auto;
-}
+      .wrapper {
+        width: 900px;
+        margin: 0 auto;
+      }
         /*body[padding= 25px]*/
-    input[type=text] {
-  width: 130px;
-  -webkit-transition: width 0.4s ease-in-out;
-  transition: width 0.4s ease-in-out;
-}
+      input[type=text] {
+        width: 130px;
+        -webkit-transition: width 0.4s ease-in-out;
+        transition: width 0.4s ease-in-out;
+      }
 
 /* When the input field gets focus, change its width to 100% */
-input[type=text]:focus {
-  width: 100%;
-}
+      input[type=text]:focus {
+        width: 100%;
+      }
     </style>
     <?php
         $conn = mysqli_connect('localhost', 'root', '');  
@@ -53,6 +52,8 @@ input[type=text]:focus {
                 mysqli_select_db($conn, 'phpProject01');  
         } 
 
+        $query = "SELECT * FROM `users`";     
+        $rs_result = mysqli_query($conn, $query);    
        /*
        //pagination available
         $per_page_record=10;
@@ -65,10 +66,8 @@ input[type=text]:focus {
         
         $start_from = ($page-1) * $per_page_record;     
         $query = "SELECT count(*) FROM `users`";     
-*/
-        $query = "SELECT * FROM `users`";     
         $rs_result = mysqli_query($conn, $query);    
-/*
+        
         $row = mysqli_fetch_row($rs_result);     
         $total_records = $row[0];     
 
@@ -108,8 +107,7 @@ input[type=text]:focus {
 
             <thead>
 
-        <table class="table-striped table-bordered table">
-        <table id="users">
+        <table class="table-striped table-bordered table" id="users">
             <thead>   
                 <tr>   
                     <th>Full Name</th>   
@@ -123,13 +121,13 @@ input[type=text]:focus {
                   // Display each field of the records.    ?>     
             <tr>     
              <td><?php echo $row['fullName']; ?></td>     
-            <td><?php echo $row['userEmail']; ?></td>
-            <td>
-                <form action="chat.php" method ="post">
-                <button type="submit" value="Open Conversation">Open Conversation</button>
-                <input type="hidden" name="selectedId" value="<?php echo $row['userId']; ?>">
-            </form>
-            </td>                                        
+              <td><?php echo $row['userEmail']; ?></td>
+              <td>
+                  <form action="chat.php" method ="post">
+                    <button type="submit" value="Open Conversation">Open Conversation</button>
+                    <input type="hidden" name="selectedId" value="<?php echo $row['userId']; ?>">
+                </form>
+              </td>                                        
             </tr>     
             <?php     
                 };    

@@ -1,5 +1,5 @@
 <?php
-  session_start();
+  if (!isset($_SESSION)) session_start();
   include_once 'phpCode/includes/functions.inc.php';
   //include_once 'generateqrcode.php';
 
@@ -20,14 +20,15 @@
     <nav>
       <div class="wrapper">
         <a href="index.php"></a>
-        <img src="img/logowhite.png" alt="Blogs logo">
+        <!--<img src="img/logowhite.png" alt="Blogs logo">-->
         <ul>
           <li><a href="index.php">Home</a></li>
-          <li><a href="userlist.php">User List</a></li>
+          
           
           <?php
             if (isset($_SESSION["userId"])) {
-              echo "<li>". $_SESSION["userId"]."</li>";
+              echo "<li>". $_SESSION["name"]."</li>";
+              echo "<li><a href='userlist.php'>User List</a></li>";
               echo "<li><a href='logout.php'>Logout</a></li>";
             }
             else {
@@ -35,8 +36,6 @@
               echo "<li><a href='login.php'>Log in</a></li>";
             }
           ?>
-          <form action = "" method=post>
-    <button type="submit" value="Logout">Log out</button>
         </ul>
       </div>
       

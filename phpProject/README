@@ -2,3 +2,10 @@ used composer require pragmarx/google2fa and composer require bacon/bacon-qr-cod
 -Simple Chatroom with log in-
 
 ==Description==
+
+
+
+//TODO 
+- make send messages work
+- make the display all messages from convo works
+- 

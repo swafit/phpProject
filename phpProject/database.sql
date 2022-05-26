@@ -7,3 +7,4 @@ CREATE TABLE users (
   twoFactorCodeSecret varchar(255),
   usersPwd varchar(128) NOT NULL
 );
+

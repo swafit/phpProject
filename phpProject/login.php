@@ -1,20 +1,16 @@
+<?php
+  include_once 'header.php';
+?>
 <?php 
-session_start();
 if(isset($_SESSION['userId'])){
   header("location: userlist.php");
   exit();
 }
 ?>
-<DOCTYPE html>
-<html>
-<head>
 <title>Chat room Log in</title>
 <link rel="stylesheet" href="style.css" />
 </head>
-<body>
-<?php
-  include_once 'header.php';
-?>
+
 
 
 <section class="signup-form">

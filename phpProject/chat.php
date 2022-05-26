@@ -1,5 +1,4 @@
 <?php include_once 'header.php';
-session_start();
 if(!isset($_SESSION['userId'])){
   header("location: login.php");
   exit();
@@ -31,12 +30,27 @@ if(!isset($_SESSION['userId'])){
   transition: width 0.4s ease-in-out;
 }
 
+
+
 /* When the input field gets focus, change its width to 100% */
 input[type=text]:focus {
   width: 100%;
 }
     </style>
     <?php
+    function writeMessage($conn, $convoId, $timeStamp, $message){
+      $userId = $_SESSION['userId'];
+      $sql = "INSERT INTO convo".$_SESSION['convoId']." (userId, message, dateWritten) VALUES (?, ?, ?);";
+        $stmt = mysqli_stmt_init($conn);
+        if (!mysqli_stmt_prepare($stmt, $sql)) {
+          header("location: ../../chat.php?error=stmtfailed");
+          exit();
+        }
+        mysqli_stmt_bind_param($stmt, "iss", $userId, $message, $timeStamp);
+        mysqli_stmt_execute($stmt);
+        mysqli_stmt_close($stmt);
+    }
+    
     /*
     $convoDB = $_SESSION['convoDB'];
         $conn = mysqli_connect('localhost', 'root', '');  
@@ -46,74 +60,41 @@ input[type=text]:focus {
         else {  
                 mysqli_select_db($conn, $convoDB);  
         }
-*/
+    */
     ?>
 </head>
 
+
 <body>
   
-<?php include_once 'phpCode/includes/functions.inc.php';
+<?php 
+//include_once 'phpCode/includes/functions.inc.php';
 
 $servername = "localhost";
 $dBUsername = "root";
 $dBPassword = "";
 $dbName = "phpproject01";
-
+$selectedUserId = $_POST['selectedId'];
 $conn = mysqli_connect($servername, $dBUsername, $dBPassword, $dbName);
-$convoId = getConvoId($conn, $_POST['selectedId']);
-
-
-
-?>
-<div id="wrapper">
-    <div id="menu">
-        <!-- add user name here 
-        <p class="welcome">Welcome, <b> <?php echo $_SESSION['name']; ?></b></p>
--->
-
-</div>
-
-<?php
-/*
-      //get previous chat
-      $me = $_SESSION['user'];
-      $id_sent = $me['user_id'];
-      $id_received = $them['user_id'];
-      $messages = $connect->query("SELECT * FROM chat ORDER BY date_time ASC")->fetchAll();
-      foreach($messages as $messages){
-        if ($messages['id_received'] == $id_sent && $messages['id_sent'] == $id_received )
-        
-        {
-          echo '<div class="received"><p class="name">'.$messages['user_sent']."</p>";
-          echo $messages['content']."<br>";
-          echo '<p class="date">'.$messages['date_time']."<br></p></div>";
-        }
-        
-        if ($messages['id_sent'] == $id_sent && $messages['id_received'] == $id_received)
-        
-        {
-          echo '<div class="sent"><p class="name">'.$messages['user_sent']."</p>";
-          echo $messages['content']."<br>";
-          echo '<p class="date">'.$messages['date_time']."<br></p></div>";
-        }
-      }
-      */
+$convoId = getConvoId($conn, $selectedUserId);
       ?>
       </div>
 
       <section class="userclass">  
       <form action = "userlist.php" method = "post">
-      <button type="submit" value="userlist">Go back to User List</button></form><br><div id="chatspace"></div>
-
+      <button type="submit" value="userlist">Go back to User List</button></form><br><br>
+      
+      <div id="chatspace"></div>
       <p>Type something in the input field to search throughout the messages:</p> 
       <input class="form-control" id="filter" type="text" placeholder="Search...">
       <br>
       <br>
 
           <thead>
+          
 
-      <table class="table-striped table-bordered table">
-        <table id="chats">
+
+      <table class="table-striped table-bordered table" id="chats">
           <thead>   
               <tr>   
                   <th>Message</th>   
@@ -123,18 +104,9 @@ $convoId = getConvoId($conn, $_POST['selectedId']);
           </thead>   
       <tbody id="myTable">   
     <?php     
-    
-            //while ($row = mysqli_fetch_array($rs_result)) {    
-                  // Display each field of the records.    ?>     
-            <tr>     
-             <td><?php //echo $row['fullName']; ?></td>
-            <td><?php //echo $row['userEmail']; ?></td>
-        <body>
-                </tr>     
-            <?php     
                 //get all the messages from the specific database
-/*
-              $sql="SELECT * FROM ".$convoId." WHERE convoId=?;";
+
+              $sql="SELECT * FROM convo".$convoId." WHERE convoId=?;";
               $stmt = mysqli_stmt_init($conn);
               if (!mysqli_stmt_prepare($stmt, $sql)) {
                 header("location: ../../chat.php?error=stmtfailed");
@@ -142,17 +114,21 @@ $convoId = getConvoId($conn, $_POST['selectedId']);
               }
               mysqli_stmt_bind_param($stmt, "i", $convoId);
               mysqli_stmt_execute($stmt);
-*/
 
-            ?>     
+
+            while ($row = mysqli_fetch_array($rs_result)) {    
+                  //Display each field of the records.    
+                  ?>     
+            <tr>     
+              <td><?php echo $row['message']; ?></td>
+              <td><?php echo $row['dateWritten']; ?></td>
+              <td><?php echo $row['userId']; ?></td>
+<?php } ?>
+        <body>
+                </tr>     
+
           </tbody>   
         </table>   
-  
-          <table id= "chats">
-    <div class="pagination">    
-      </tr>
-      <form name= "messageTimestamp action 
-                    <th>Name </th>= " method="POST">
     <script>
       $(document).ready(function(){
         $("#filter").on("keyup", function() {
@@ -163,12 +139,18 @@ $convoId = getConvoId($conn, $_POST['selectedId']);
         });
       });
     </script>
-        
+        <form action = "" method = "post">
     <label for ="msg">Type Message...</label>
     <input type ="text" maxlength="255" id="msg" name="msg">
-    <button type="submit" value="send">Send </button><br>
-
+    <button type="submit" value="send">Send </button><br><br><br>
+    </form>
     <form action="chat.php" method ="post">
-        <button type="submit" value="Refresh">Refresh</button></form>
+        <button type="submit" name="convoDB" value="Refresh">Refresh messages</button>
+        <?php
+        date_default_timezone_set('America/New_York');
+        $date = date('Y-m-d H:i:s');
+        echo 'Date: ', $date;
+        ?>
+      </form>
     </form> 
     <?php include_once 'footer.php'; ?>

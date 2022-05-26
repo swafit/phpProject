@@ -1,8 +1,9 @@
 <?php
 //write a message to the specific database
+/*
 function writeMessage($conn, $convoId, $timeStamp, $message){
-	$userId = $_SESSION['id'];
-	$sql = "INSERT INTO".$convoId." (userId, message, dateWritten) VALUES (?, ?, ?);";
+	$userId = $_SESSION['userId'];
+	$sql = "INSERT INTO convo".$convoId." (userId, message, dateWritten) VALUES (?, ?, ?);";
 		$stmt = mysqli_stmt_init($conn);
 		if (!mysqli_stmt_prepare($stmt, $sql)) {
 			header("location: ../../chat.php?error=stmtfailed");
@@ -12,7 +13,7 @@ function writeMessage($conn, $convoId, $timeStamp, $message){
 		mysqli_stmt_execute($stmt);
 		mysqli_stmt_close($stmt);
 }
-
+*/
 //get all the messages from the specific database
 function getChats($convoId, $conn){
 	$sql="SELECT * FROM ".$convoId." WHERE convoId=?;";
@@ -23,9 +24,8 @@ function getChats($convoId, $conn){
 	}
 	mysqli_stmt_bind_param($stmt, "i", $convoId);
 	mysqli_stmt_execute($stmt);
-
-
-
+	$resultData = mysqli_stmt_get_result($stmt);
+	return $resultData;
 }
 
 
@@ -44,21 +44,20 @@ function emptyInputSignup($conn, $name, $username, $email, $twofaEnabled, $twofa
 
 //get the id of the convo
 function getConvoId($conn, $selectedUserId) {
-	$sql="SELECT * FROM convoController WHERE userIdOne=? AND userIdTwo=?;";
+	$sql="SELECT * FROM convocontroller WHERE userIdOne=? AND userIdTwo=?;";
 	$stmt = mysqli_stmt_init($conn);
 	if (!mysqli_stmt_prepare($stmt, $sql)) {
 		header("location: ../../chat.php?error=stmtfailed");
 		exit();
 	}
-	$userIdOne = $_SESSION['$id'];
+	$userIdOne = $_SESSION["userId"];
 	$userIdTwo = $selectedUserId;
 	if ($userIdOne >= $selectedUserId){
 		$userIdOne = $selectedUserId;
-		$userIdTwo = $_SESSION['$id'];
+		$userIdTwo = $_SESSION["userId"];
 	}
 	mysqli_stmt_bind_param($stmt, "ii", $userIdOne, $userIdTwo);
 	mysqli_stmt_execute($stmt);
-
 	// "Get result" returns the results from a prepared statement
 	$resultData = mysqli_stmt_get_result($stmt);
 
@@ -66,7 +65,7 @@ function getConvoId($conn, $selectedUserId) {
 		$convoId = $row['convoId'];
 	}
 	else {
-		$sql = "INSERT INTO convoController (userIdOne, userIdTwo) VALUES (?, ?);";
+		$sql = "INSERT INTO convocontroller (userIdOne, userIdTwo) VALUES (?, ?);";
 		$stmt1 = mysqli_stmt_init($conn);
 		if (!mysqli_stmt_prepare($stmt1, $sql)) {
 			header("location: ../../chat.php?error=stmtfailed");
@@ -74,13 +73,16 @@ function getConvoId($conn, $selectedUserId) {
 		}
 		mysqli_stmt_bind_param($stmt1, "ii", $userIdOne, $userIdTwo);
 		$convoId = mysqli_stmt_insert_id($stmt1);
+		
 		mysqli_stmt_close($stmt1);
-		$sqlDB = "CREATE TABLE if NOT EXISTS ".$convoId." (messageId int(11) PRIMARY KEY AUTO_INCREMENT NOT NULL, userId int(11) NOT NULL, message VARCHAR(255) NOT NULL, dateWritten VARCHAR(255) NOT NULL);";
-    	$conn->exec($sqlDB);
+
+		$sqlDB = "CREATE TABLE if NOT EXISTS convo".$convoId." (messageId int(11) PRIMARY KEY AUTO_INCREMENT NOT NULL, userId int(11) NOT NULL, message VARCHAR(255) NOT NULL, dateWritten VARCHAR(255) NOT NULL);";
+    	$conn->query($sqlDB);
 	}
 	mysqli_stmt_close($stmt);
-
+	$_SESSION['convoId'] = $convoId;
 	return $convoId;
+
 }
 
 
@@ -122,17 +124,14 @@ function pwdMatch($pwd, $pwdrepeat) {
 
 // Check if username is in database, if so then return data
 function uidExists($conn, $username) {
-  $sql = "SELECT * FROM users WHERE userId = ? OR userEmail = ?;";
+  $sql = "SELECT * FROM users WHERE userName = ? OR userEmail = ?;";
 	$stmt = mysqli_stmt_init($conn);
 	if (!mysqli_stmt_prepare($stmt, $sql)) {
 		header("location: ../../signup.php?error=stmtfailed");
 		exit();
 	}
-
 	mysqli_stmt_bind_param($stmt, "ss", $username, $username);
 	mysqli_stmt_execute($stmt);
-
-	// "Get result" returns the results from a prepared statement
 	$resultData = mysqli_stmt_get_result($stmt);
 
 	if ($row = mysqli_fetch_assoc($resultData)) {

@@ -1,3 +1,11 @@
+
+<?php
+  include_once 'header.php';
+  if(isset($_SESSION['userId'])){
+    header("location: userlist.php");
+    exit();
+  }
+?>
 <head>
 <style>
   
@@ -6,19 +14,9 @@
             color: red;
         }
 
-   
     </style>
     <link rel="stylesheet" href="style.css" />
 </head>
-
-<?php
-  include_once 'header.php';
-  session_start();
-  if(isset($_SESSION['userId'])){
-    header("location: userlist.php");
-    exit();
-  }
-?>
 
 <section class="signup-form">
   <h2>Sign Up</h2>
