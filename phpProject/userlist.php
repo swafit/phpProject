@@ -1,5 +1,10 @@
 <?php
   include_once 'header.php';
+  session_start();
+  if(!isset($_SESSION['userId'])){
+    header("location: login.php");
+    exit();
+  }
   ?>
 <head>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.bundle.min.js%22%3E"></script>

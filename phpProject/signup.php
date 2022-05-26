@@ -13,6 +13,11 @@
 
 <?php
   include_once 'header.php';
+  session_start();
+  if(isset($_SESSION['userId'])){
+    header("location: userlist.php");
+    exit();
+  }
 ?>
 
 <section class="signup-form">

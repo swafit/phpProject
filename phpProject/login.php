@@ -1,7 +1,7 @@
 <?php 
 session_start();
-if(isset($_SESSION['user'])){
-  header("location: user_list.php");
+if(isset($_SESSION['userId'])){
+  header("location: userlist.php");
   exit();
 }
 ?>

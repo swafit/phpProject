@@ -186,7 +186,7 @@ function loginUser($conn, $username, $pwd) {
 		exit();
 	}
 
-	$pwdHashed = $uidExists["usersPwd"];
+	$pwdHashed = $uidExists["userPwd"];
 	$checkPwd = password_verify($pwd, $pwdHashed);
 
 	if ($checkPwd === false) {
@@ -195,8 +195,8 @@ function loginUser($conn, $username, $pwd) {
 	}
 	elseif ($checkPwd === true) {
 		session_start();
-		$_SESSION["userid"] = $uidExists["userId"];
-		$_SESSION["useruid"] = $uidExists["userUid"];
+		$_SESSION["userId"] = $uidExists["userId"];
+		$_SESSION["name"] = $uidExists["fullName"];
 		header("location: ../../index.php?error=none");
 		exit();
 	}
