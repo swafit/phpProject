@@ -16,7 +16,7 @@ function writeMessage($conn, $convoId, $timeStamp, $message){
 */
 //get all the messages from the specific database
 function getChats($convoId, $conn){
-	$sql="SELECT * FROM ".$convoId." WHERE convoId=?;";
+	$sql="SELECT * FROM convos WHERE convoId=?;";
 	$stmt = mysqli_stmt_init($conn);
 	if (!mysqli_stmt_prepare($stmt, $sql)) {
 		header("location: ../../chat.php?error=stmtfailed");
@@ -41,8 +41,8 @@ function emptyInputSignup($conn, $name, $username, $email, $twofaEnabled, $twofa
 	return $result;
 }
 
-
-//get the id of the convo
+/*
+//get the id of the convo. This was the initial way we intended to store the messages in a table for each convo. We bifurcated from that plan and instead store all the messages in a table named messages
 function getConvoId($conn, $selectedUserId) {
 	$sql="SELECT * FROM convocontroller WHERE userIdOne=? AND userIdTwo=?;";
 	$stmt = mysqli_stmt_init($conn);
@@ -80,7 +80,7 @@ function getConvoId($conn, $selectedUserId) {
 	$_SESSION['convoId'] = $convoId;
 	return $convoId;
 
-}
+}*/
 
 
 // Check invalid username

@@ -31,30 +31,26 @@ echo "<br>";
 
 
   <h1>This Is Our Chatroom Site</h1>
-  <p>Sign up and start a chat room live messaging session!</p>
+  <p><a href="login.php">Sign up</a> and start a chat room live messaging session!</p>
 
 </section>
 
 
 <section class="index-categories">
     
-  <h2>Some Basic Categories</h2>
+  <h2>A few suggestions</h2>
   <div class="index-categories-list">
-  <h2>Chat Messages</h2>
 
 <div class="container">
-  <p>Hello. How are you today?</p>
-  <span class="time-right">11:00</span>
+  <p>Use a startup chat service who has it users at heart.</p>
 </div>
 
 <div class="container darker">
-  <p>Hey! I'm fine. Thanks for asking!</p>
-  <span class="time-left">11:01</span>
+  <p>Have a conversation and be able to sort thorough old chats.</p>
 </div>
 
 <div class="container darker">
-  <p>Nah, I dunno. Play soccer.. or learn more coding perhaps?</p>
-  <span class="time-left">11:05</span>
+  <p>Chat with people you know.</p>
 </div>
 </section>
 
