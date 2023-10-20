@@ -1,2 +1,2 @@
 # phpProject
-Php group project
+A PHP chatroom with login.
