@@ -1,4 +1,1 @@
-was going to use composer require pragmarx/google2fa and composer require bacon/bacon-qr-code
-for 2fa but didn't have time to finish implementing it.
-
--Simple Chatroom with log in-
+A PHP Chatroom with log in
